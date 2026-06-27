@@ -1,29 +1,29 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: __SERVICE_NAME__-alerts
+  name: invoice-api-alerts
   labels:
-    app.kubernetes.io/name: __SERVICE_NAME__
+    app.kubernetes.io/name: invoice-api
     release: prometheus
 spec:
   groups:
-    - name: __SERVICE_NAME__.availability
+    - name: invoice-api.availability
       rules:
-        - alert: __SERVICE_NAME__HighErrorRate
-          expr: sum(rate(http_requests_total{service="__SERVICE_NAME__",status=~"5.."}[5m])) / sum(rate(http_requests_total{service="__SERVICE_NAME__"}[5m])) > 0.05
+        - alert: invoice-apiHighErrorRate
+          expr: sum(rate(http_requests_total{service="invoice-api",status=~"5.."}[5m])) / sum(rate(http_requests_total{service="invoice-api"}[5m])) > 0.05
           for: 10m
           labels:
             severity: warning
-            team: __TEAM_NAME__
+            team: Commerce
           annotations:
-            summary: __SERVICE_NAME__ has elevated 5xx responses.
+            summary: invoice-api has elevated 5xx responses.
             runbook_url: docs/RUNBOOK.md
-        - alert: __SERVICE_NAME__Unavailable
-          expr: up{job="__SERVICE_NAME__"} == 0
+        - alert: invoice-apiUnavailable
+          expr: up{job="invoice-api"} == 0
           for: 5m
           labels:
             severity: critical
-            team: __TEAM_NAME__
+            team: Commerce
           annotations:
-            summary: __SERVICE_NAME__ is not being scraped or is unavailable.
+            summary: invoice-api is not being scraped or is unavailable.
             runbook_url: docs/RUNBOOK.md
